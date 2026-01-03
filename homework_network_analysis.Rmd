@@ -1,0 +1,120 @@
+---
+title: "Network Analysis Homework: Hollywood Actors Graph"
+author: "Aiden Dickson"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## I. Getting Ready
+
+```{r}
+set.seed(1111)
+library(igraph)
+library(ggraph)
+library(corrplot)
+```
+
+------------------------------------------------------------------------
+
+## Task 1: Re-read the Graph from GitHub (Cloud)
+
+```{r}
+fileLink = 'https://github.com/AidenFlowers/assign2-computation-socsci-methods-dacss-690c/raw/main/homework-resources/hollywood.graphml'
+actors = read_graph(fileLink, format = 'graphml')
+head(actors)
+```
+
+------------------------------------------------------------------------
+
+## Task 2: Compute Node Centrality Measures
+
+```{r}
+eigen = eigen_centrality(actors)$vector
+close = closeness(actors, normalized = T)
+betw = betweenness(actors, normalized = T)
+
+DFCentrality = as.data.frame(cbind(eigen, close, betw), stringsAsFactors = F)
+names(DFCentrality) = c('Eigenvector', 'Closeness', 'Betweenness')
+DFCentrality$person = row.names(DFCentrality)
+row.names(DFCentrality) = NULL
+```
+
+------------------------------------------------------------------------
+
+## Task 3: Correlation Plot
+
+```{r}
+cor_matrix = cor(DFCentrality[, c("Eigenvector", "Closeness", "Betweenness")])
+
+corrplot(cor_matrix, 
+         method = "circle", 
+         type = "upper", 
+         addCoef.col = "black", 
+         tl.col = "black",
+         title = "Correlation of Centrality Measures",
+         mar = c(0, 0, 2, 0))
+```
+
+### Interpretation
+
+-   **Eigenvector vs Closeness (-0.68):** Strong negative correlation. Actors connected to other highly-connected actors form tight clusters but are distant from other groups.
+-   **Eigenvector vs Betweenness (-0.25):** Weak negative correlation. Being well-connected to important actors doesn't strongly predict being a bridge between groups.
+-   **Closeness vs Betweenness (+0.77):** Strong positive correlation. Actors who can reach others quickly also tend to lie on shortest paths between others.
+
+This pattern suggests a network with distinct clusters where some actors dominate one cluster while others serve as bridges.
+
+------------------------------------------------------------------------
+
+## Task 4: Is it Possible Communities are Present?
+
+```{r}
+RandomNet = sample_gnp(length(V(actors)), p = edge_density(actors))
+transitivity(actors) / transitivity(RandomNet)
+```
+
+**Yes, communities are likely present.** The transitivity ratio exceeds 1, indicating the network has more clustering than expected by chance in a random network of the same size and density.
+
+------------------------------------------------------------------------
+
+## Task 5: Community Detection
+
+### Girvan-Newman Algorithm
+
+```{r}
+partition_girvanNewman_best = cluster_edge_betweenness(actors)
+gn_modularity = max(partition_girvanNewman_best$modularity)
+cat("Girvan-Newman Modularity:", gn_modularity, "\n")
+```
+
+### Louvain Algorithm
+
+```{r}
+partition_louvain_optimal = cluster_louvain(actors)
+louvain_modularity = max(partition_louvain_optimal$modularity)
+cat("Louvain Modularity:", louvain_modularity, "\n")
+```
+
+### Plot the Best Result
+
+```{r}
+V(actors)$louvain = as.factor(membership(partition_louvain_optimal))
+V(actors)$girvanNewman = as.factor(membership(partition_girvanNewman_best))
+
+best_algorithm = ifelse(gn_modularity > louvain_modularity, "Girvan-Newman", "Louvain")
+best_partition = ifelse(gn_modularity > louvain_modularity, "girvanNewman", "louvain")
+best_modularity = max(gn_modularity, louvain_modularity)
+
+base = ggraph(graph = actors, layout = 'fr') + geom_edge_link(alpha = 0.2)
+
+base +
+  geom_node_point(aes(color = get(best_partition)), show.legend = TRUE, size = 4) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+  labs(title = paste("Community Detection:", best_algorithm, "(Best Result)"),
+       subtitle = paste("Modularity:", round(best_modularity, 3)),
+       color = "Community") +
+  theme_graph()
+```
