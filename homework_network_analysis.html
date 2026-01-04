@@ -390,7 +390,20 @@ betw = betweenness(actors, normalized = T)
 DFCentrality = as.data.frame(cbind(eigen, close, betw), stringsAsFactors = F)
 names(DFCentrality) = c(&#39;Eigenvector&#39;, &#39;Closeness&#39;, &#39;Betweenness&#39;)
 DFCentrality$person = row.names(DFCentrality)
-row.names(DFCentrality) = NULL</code></pre>
+
+DFCentrality</code></pre>
+<pre><code>##                   Eigenvector Closeness Betweenness            person
+## Robin Williams    0.606705039 0.3571429  0.37777778    Robin Williams
+## Tom Hardy         0.014699527 0.3703704  0.01111111         Tom Hardy
+## Dustin Hoffman    0.034689773 0.4545455  0.17777778    Dustin Hoffman
+## Leonardo DiCaprio 0.037143649 0.4761905  0.33333333 Leonardo DiCaprio
+## Tom Hanks         0.072098921 0.5000000  0.53333333         Tom Hanks
+## Al Pacino         1.000000000 0.2702703  0.00000000         Al Pacino
+## Morgan Freeman    0.007860685 0.3125000  0.02222222    Morgan Freeman
+## Robert De Niro    1.000000000 0.2702703  0.00000000    Robert De Niro
+## Matt Damon        0.188206119 0.4347826  0.46666667        Matt Damon
+## Jack Nicholson    0.012477963 0.3703704  0.07777778    Jack Nicholson
+## Christian Bale    0.015873210 0.3846154  0.11111111    Christian Bale</code></pre>
 <hr />
 </div>
 <div id="task-3-correlation-plot" class="section level2">

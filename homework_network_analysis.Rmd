@@ -40,7 +40,8 @@ betw = betweenness(actors, normalized = T)
 DFCentrality = as.data.frame(cbind(eigen, close, betw), stringsAsFactors = F)
 names(DFCentrality) = c('Eigenvector', 'Closeness', 'Betweenness')
 DFCentrality$person = row.names(DFCentrality)
-row.names(DFCentrality) = NULL
+
+DFCentrality
 ```
 
 ------------------------------------------------------------------------
