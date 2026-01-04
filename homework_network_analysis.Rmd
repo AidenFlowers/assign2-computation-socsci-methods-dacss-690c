@@ -61,7 +61,7 @@ corrplot(cor_matrix,
          mar = c(0, 0, 2, 2))
 ```
 
-### Interpretation
+### Interpretation - Correlation of Centrality
 
 -   **Eigenvector vs Closeness (-0.68):** Strong negative correlation. Actors connected to other highly-connected actors form tight clusters but are distant from other groups.
 -   **Eigenvector vs Betweenness (-0.25):** Weak negative correlation. Being well-connected to important actors doesn't strongly predict being a bridge between groups.
