@@ -439,13 +439,27 @@ actors dominate one cluster while others serve as bridges.</p>
 <div id="task-4-is-it-possible-communities-are-present" class="section level2">
 <h2>Task 4: Is it Possible Communities are Present?</h2>
 <pre class="r"><code>RandomNet = sample_gnp(length(V(actors)), p = edge_density(actors))
-transitivity(actors) / transitivity(RandomNet)</code></pre>
-<pre><code>## [1] 0.875</code></pre>
-<p><strong>Yes, communities are likely present.</strong> The
-transitivity ratio exceeds 1, indicating the network has more clustering
-than expected by chance in a random network of the same size and
-density.</p>
+ratio = transitivity(actors) / transitivity(RandomNet)
+cat(&quot;Actors transitivity:&quot;, transitivity(actors), &quot;\n&quot;)</code></pre>
+<pre><code>## Actors transitivity: 0.25</code></pre>
+<pre class="r"><code>cat(&quot;Random transitivity:&quot;, transitivity(RandomNet), &quot;\n&quot;)</code></pre>
+<pre><code>## Random transitivity: 0.2857143</code></pre>
+<pre class="r"><code>cat(&quot;Resultant Ratio:&quot;, sprintf(&quot;%.3f&quot;, ratio), &quot;\n&quot;)</code></pre>
+<pre><code>## Resultant Ratio: 0.875</code></pre>
+<div id="interpretation-1" class="section level3">
+<h3>Interpretation</h3>
+<ul>
+<li><strong>Resultant Ratio</strong> The resultant ratio is 0.875, which
+is less than 1. This means the Hollywood actors network has slightly
+less clustering than a comparable random network. Based on the
+transitivity test alone, there is no strong evidence for community
+structure. However, this test has limitations for small networks (11
+nodes). *As we will see, the modularity scores from community detection
+algorithms (Girvan-Newman and Louvain, both &gt; 0.4) provide stronger
+evidence that meaningful communities do exist.</li>
+</ul>
 <hr />
+</div>
 </div>
 <div id="task-5-community-detection" class="section level2">
 <h2>Task 5: Community Detection</h2>

@@ -73,11 +73,18 @@ This pattern suggests a network with distinct clusters where some actors dominat
 ## Task 4: Is it Possible Communities are Present?
 
 ```{r}
+ 
+
 RandomNet = sample_gnp(length(V(actors)), p = edge_density(actors))
-transitivity(actors) / transitivity(RandomNet)
+ratio = transitivity(actors) / transitivity(RandomNet)
+cat("Actors transitivity:", transitivity(actors), "\n")
+cat("Random transitivity:", transitivity(RandomNet), "\n")
+cat("Resultant Ratio:", sprintf("%.3f", ratio), "\n")
 ```
 
-**Yes, communities are likely present.** The transitivity ratio exceeds 1, indicating the network has more clustering than expected by chance in a random network of the same size and density.
+### Interpretation
+
+-   **Resultant Ratio** The resultant ratio is 0.875, which is less than 1. This means the Hollywood actors network has slightly less clustering than a comparable random network. Based on the transitivity test alone, there is no strong evidence for community structure. However, this test has limitations for small networks (11 nodes). \*As we will see, the modularity scores from community detection algorithms (Girvan-Newman and Louvain, both \> 0.4) provide stronger evidence that meaningful communities do exist.
 
 ------------------------------------------------------------------------
 
