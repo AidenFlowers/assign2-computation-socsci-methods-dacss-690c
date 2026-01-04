@@ -128,6 +128,6 @@ ggraph(graph = actors, layout = 'fr') +
   theme_graph()
 ```
 
-### Girvan-Newman Interpretation
+### Interpretation - Girvan-Newman 
 
 The community detection reveals two distinct clusters in the Hollywood actors network. The modularity score above 0.4 indicates meaningful community structure. One cluster centres on actors like Al Pacino and Robert De Niro — who share high eigenvector centrality and multiple collaborations. The other cluster includes actors like Tom Hanks, who serves as a bridge between groups (high betweenness) rather than being deeply embedded in one cluster. This aligns with our earlier correlation findings: actors with high eigenvector centrality (connected to important others) tend to have low closeness (distant from the broader network), while bridge actors show the opposite pattern.
