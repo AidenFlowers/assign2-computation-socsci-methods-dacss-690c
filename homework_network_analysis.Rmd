@@ -51,13 +51,14 @@ DFCentrality
 ```{r}
 cor_matrix = cor(DFCentrality[, c("Eigenvector", "Closeness", "Betweenness")])
 
-corrplot(cor_matrix, 
-         method = "circle", 
-         type = "upper", 
-         addCoef.col = "black", 
+corrplot(cor_matrix,
+         method = "circle",
+         type = "upper",
+         addCoef.col = "white",
+         number.cex = 0.75,
          tl.col = "black",
          title = "Correlation of Centrality Measures",
-         mar = c(0, 0, 2, 0))
+         mar = c(0, 0, 2, 2))
 ```
 
 ### Interpretation
@@ -73,12 +74,13 @@ This pattern suggests a network with distinct clusters where some actors dominat
 ## Task 4: Is it Possible Communities are Present?
 
 ```{r}
- 
-
 RandomNet = sample_gnp(length(V(actors)), p = edge_density(actors))
-ratio = transitivity(actors) / transitivity(RandomNet)
-cat("Actors transitivity:", transitivity(actors), "\n")
-cat("Random transitivity:", transitivity(RandomNet), "\n")
+trans_actors = transitivity(actors)
+trans_random = transitivity(RandomNet)
+ratio = trans_actors / trans_random
+
+cat("Actors transitivity:", trans_actors, "\n")
+cat("Random transitivity:", trans_random, "\n")
 cat("Resultant Ratio:", sprintf("%.3f", ratio), "\n")
 ```
 
@@ -116,9 +118,8 @@ best_algorithm = ifelse(gn_modularity > louvain_modularity, "Girvan-Newman", "Lo
 best_partition = ifelse(gn_modularity > louvain_modularity, "girvanNewman", "louvain")
 best_modularity = max(gn_modularity, louvain_modularity)
 
-base = ggraph(graph = actors, layout = 'fr') + geom_edge_link(alpha = 0.2)
-
-base +
+ggraph(graph = actors, layout = 'fr') +
+  geom_edge_link(alpha = 0.2) +
   geom_node_point(aes(color = get(best_partition)), show.legend = TRUE, size = 4) +
   geom_node_text(aes(label = name), repel = TRUE, size = 3) +
   labs(title = paste("Community Detection:", best_algorithm, "(Best Result)"),
