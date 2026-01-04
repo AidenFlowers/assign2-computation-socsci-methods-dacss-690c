@@ -84,7 +84,7 @@ cat("Random transitivity:", trans_random, "\n")
 cat("Resultant Ratio:", sprintf("%.3f", ratio), "\n")
 ```
 
-### Interpretation
+### Interpretation - Possible Communities
 
 -   **Resultant Ratio** The resultant ratio is 0.875, which is less than 1. This means the Hollywood actors network has slightly less clustering than a comparable random network. Based on the transitivity test alone, there is no strong evidence for community structure. However, this test has limitations for small networks (11 nodes). \*As we will see, the modularity scores from community detection algorithms (Girvan-Newman and Louvain, both \> 0.4) provide stronger evidence that meaningful communities do exist.
 
